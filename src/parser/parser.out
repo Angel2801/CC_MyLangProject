@@ -2,11 +2,26 @@ Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
 Unused terminals:
 
+    AND
     ARROW
+    COMMA
     ELSE
+    FLOAT
     FUN
+    GEQ
+    GREATER
     IF
+    LBRACE
+    LEQ
+    LESS
     MATCH
+    MOD
+    NEQ
+    NOT
+    OR
+    RBRACE
+    SEMICOLON
+    STRING
     THEN
     WITH
 
@@ -24,20 +39,35 @@ Rule 8     expression -> LPAREN expression RPAREN
 
 Terminals, with rules where they appear
 
+AND                  : 
 ARROW                : 
+COMMA                : 
 DIVIDE               : 5
 ELSE                 : 
 EQUAL                : 1
+FLOAT                : 
 FUN                  : 
+GEQ                  : 
+GREATER              : 
 IDENTIFIER           : 1 7
 IF                   : 
+LBRACE               : 
+LEQ                  : 
+LESS                 : 
 LET                  : 1
 LPAREN               : 8
 MATCH                : 
 MINUS                : 3
+MOD                  : 
+NEQ                  : 
+NOT                  : 
 NUMBER               : 6
+OR                   : 
 PLUS                 : 2
+RBRACE               : 
 RPAREN               : 8
+SEMICOLON            : 
+STRING               : 
 THEN                 : 
 TIMES                : 4
 WITH                 : 
