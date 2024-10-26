@@ -1,35 +1,54 @@
-# src/ast/nodes.py
+from dataclasses import dataclass
+from typing import Any, Optional, List
+
+@dataclass
+class Position:
+    line: int
+    column: int
 
 class ASTNode:
-    pass
+    def __init__(self):
+        self.position: Optional[Position] = None
+        self.type: Optional[str] = None
 
+@dataclass
 class AssignmentNode(ASTNode):
-    def __init__(self, identifier, value):
-        self.identifier = identifier
-        self.value = value
+    identifier: str
+    value: ASTNode
+    type_annotation: Optional[str] = None
 
-    def __repr__(self):
-        return f"AssignmentNode({self.identifier}, {self.value})"
+@dataclass
+class FunctionNode(ASTNode):
+    name: str
+    params: List[str]
+    body: ASTNode
+    return_type: Optional[str] = None
 
+@dataclass
 class BinaryOperationNode(ASTNode):
-    def __init__(self, operator, left, right):
-        self.operator = operator
-        self.left = left
-        self.right = right
+    operator: str
+    left: ASTNode
+    right: ASTNode
 
-    def __repr__(self):
-        return f"BinaryOperationNode({self.operator}, {self.left}, {self.right})"
+@dataclass
+class UnaryOperationNode(ASTNode):
+    operator: str
+    operand: ASTNode
 
+@dataclass
+class IfNode(ASTNode):
+    condition: ASTNode
+    then_branch: ASTNode
+    else_branch: Optional[ASTNode]
+
+@dataclass
 class NumberNode(ASTNode):
-    def __init__(self, value):
-        self.value = value
+    value: Any
 
-    def __repr__(self):
-        return f"NumberNode({self.value})"
+@dataclass
+class StringNode(ASTNode):
+    value: str
 
+@dataclass
 class IdentifierNode(ASTNode):
-    def __init__(self, name):
-        self.name = name
-
-    def __repr__(self):
-        return f"IdentifierNode({self.name})"
+    name: str

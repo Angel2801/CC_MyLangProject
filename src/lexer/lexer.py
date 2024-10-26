@@ -1,24 +1,39 @@
-# src/lexer/lexer.py
-
 import ply.lex as lex
+from typing import List, Any
 
-# Token names
+class LexerError(Exception):
+    pass
+
+# Extended token set
 tokens = (
     'LET', 'FUN', 'IF', 'THEN', 'ELSE', 'MATCH', 'WITH', 'ARROW',
-    'IDENTIFIER', 'NUMBER', 'PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'LPAREN', 'RPAREN', 'EQUAL'
+    'IDENTIFIER', 'NUMBER', 'STRING', 'FLOAT',
+    'PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'MOD',
+    'LPAREN', 'RPAREN', 'LBRACE', 'RBRACE',
+    'EQUAL', 'LESS', 'GREATER', 'LEQ', 'GEQ', 'NEQ',
+    'AND', 'OR', 'NOT', 'SEMICOLON', 'COMMA'
 )
 
-# Regular expressions for simple tokens
+# Regular expressions for tokens
 t_PLUS = r'\+'
 t_MINUS = r'-'
 t_TIMES = r'\*'
 t_DIVIDE = r'/'
-t_ARROW = r'->'
+t_MOD = r'%'
 t_LPAREN = r'\('
 t_RPAREN = r'\)'
+t_LBRACE = r'\{'
+t_RBRACE = r'\}'
+t_ARROW = r'->'
 t_EQUAL = r'='
+t_LESS = r'<'
+t_GREATER = r'>'
+t_LEQ = r'<='
+t_GEQ = r'>='
+t_NEQ = r'!='
+t_SEMICOLON = r';'
+t_COMMA = r','
 
-# Keywords dictionary to differentiate keywords from identifiers
 keywords = {
     'let': 'LET',
     'fun': 'FUN',
@@ -26,33 +41,39 @@ keywords = {
     'then': 'THEN',
     'else': 'ELSE',
     'match': 'MATCH',
-    'with': 'WITH'
+    'with': 'WITH',
+    'and': 'AND',
+    'or': 'OR',
+    'not': 'NOT'
 }
 
-# Function for identifiers and keywords
-def t_IDENTIFIER(t):
-    r'[a-zA-Z_][a-zA-Z0-9_]*'
-    t.type = keywords.get(t.value, 'IDENTIFIER')  # Check for keywords
+def t_FLOAT(t):
+    r'\d*\.\d+'
+    t.value = float(t.value)
     return t
 
-# Function for number tokens
 def t_NUMBER(t):
     r'\d+'
     t.value = int(t.value)
     return t
 
-# Ignore spaces, tabs, and newlines
+def t_STRING(t):
+    r'\"([^\\\n]|(\\.))*?\"'
+    t.value = t.value[1:-1]  # Remove quotes
+    return t
+
+def t_IDENTIFIER(t):
+    r'[a-zA-Z_][a-zA-Z0-9_]*'
+    t.type = keywords.get(t.value, 'IDENTIFIER')
+    return t
+
 t_ignore = ' \t'
 
-# Newline handling
 def t_NEWLINE(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
 
-# Error handling function
 def t_error(t):
-    print(f"Illegal character '{t.value[0]}'")
-    t.lexer.skip(1)
+    raise LexerError(f"Illegal character '{t.value[0]}' at line {t.lexer.lineno}")
 
-# Build the lexer
 lexer = lex.lex()
