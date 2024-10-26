@@ -1,4 +1,5 @@
 # src/lexer/lexer.py
+
 import ply.lex as lex
 
 # Token names
@@ -40,8 +41,13 @@ def t_NUMBER(t):
     t.value = int(t.value)
     return t
 
-# Ignored characters (spaces and tabs)
+# Ignore spaces, tabs, and newlines
 t_ignore = ' \t'
+
+# Newline handling
+def t_NEWLINE(t):
+    r'\n+'
+    t.lexer.lineno += len(t.value)
 
 # Error handling function
 def t_error(t):
